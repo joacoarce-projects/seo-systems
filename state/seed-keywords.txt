@@ -1,6 +1,15 @@
-# One seed keyword per line. Lines starting with # are ignored.
-# The keyword-researcher rotates through these on each run, tracking
-# last_researched per seed in keyword-bank.json so seeds aren't duplicated.
-# Replace these examples with seeds relevant to your business.
-example seed keyword
-another example seed
+# Seeds del cliente casasprefabricadaschile.cl (L6 SEO).
+# Una seed por línea. Líneas con # se ignoran.
+# El keyword-researcher rota entre estas en cada run y trackea last_researched
+# por seed en keyword-bank.json para no duplicar.
+
+casas prefabricadas
+casas prefabricadas chile
+casas prefabricadas precios
+tiny house chile
+metalcom vs sip
+subsidio minvu casa prefabricada
+casas prefabricadas temuco
+casas prefabricadas concepcion
+cotizar casa prefabricada
+permisos casa prefabricada chile

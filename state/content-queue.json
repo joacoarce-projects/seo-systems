@@ -1,6 +1,138 @@
 {
   "schema_version": 2,
   "description": "Read by content-writer (System 2). Each item has a status. content-writer picks the next status='queued' item, writes the post, then sets status='written' or 'needs_review'.",
-  "status_values": ["queued", "in_progress", "written", "needs_review", "skipped"],
-  "items": []
+  "status_values": [
+    "queued",
+    "in_progress",
+    "written",
+    "needs_review",
+    "skipped"
+  ],
+  "items": [
+    {
+      "id": "2026-05-21-casas-prefabricadas-kit-completo-precio",
+      "status": "queued",
+      "queued_at": "2026-05-21T00:00:00Z",
+      "written_at": null,
+      "post_url": null,
+      "primary_keyword": "casas prefabricadas kit completo precio",
+      "intent": "commercial",
+      "volume": 1600,
+      "kd": null,
+      "fan_out_cluster": [
+        "casas prefabricadas",
+        "casas prefabricadas chile",
+        "casas prefabricadas temuco",
+        "casas prefabricadas puerto montt",
+        "casas prefabricadas valores",
+        "casas prefabricadas osorno"
+      ],
+      "suggested_slug": "casas-prefabricadas-kit-completo-precio",
+      "suggested_title": "Casas prefabricadas kit completo precio",
+      "target_word_count": 1800,
+      "internal_link_targets": [],
+      "external_authority_candidates": [],
+      "notes": "Auto-queued by keyword-researcher run 2026-05-21. Seed: casas prefabricadas."
+    },
+    {
+      "id": "2026-05-21-casas-prefabricadas-valores",
+      "status": "queued",
+      "queued_at": "2026-05-21T00:00:00Z",
+      "written_at": null,
+      "post_url": null,
+      "primary_keyword": "casas prefabricadas valores",
+      "intent": "commercial",
+      "volume": 1300,
+      "kd": null,
+      "fan_out_cluster": [
+        "casas prefabricadas",
+        "casas prefabricadas chile",
+        "casas prefabricadas temuco",
+        "casas prefabricadas puerto montt",
+        "casas prefabricadas kit completo precio",
+        "casas prefabricadas osorno"
+      ],
+      "suggested_slug": "casas-prefabricadas-valores",
+      "suggested_title": "Casas prefabricadas valores",
+      "target_word_count": 1800,
+      "internal_link_targets": [],
+      "external_authority_candidates": [],
+      "notes": "Auto-queued by keyword-researcher run 2026-05-21. Seed: casas prefabricadas."
+    },
+    {
+      "id": "2026-05-21-valor-casas-prefabricadas-precios-y-fotos",
+      "status": "queued",
+      "queued_at": "2026-05-21T00:00:00Z",
+      "written_at": null,
+      "post_url": null,
+      "primary_keyword": "valor casas prefabricadas precios y fotos",
+      "intent": "commercial",
+      "volume": 1300,
+      "kd": null,
+      "fan_out_cluster": [
+        "casas prefabricadas",
+        "casas prefabricadas chile",
+        "casas prefabricadas temuco",
+        "casas prefabricadas puerto montt",
+        "casas prefabricadas kit completo precio",
+        "casas prefabricadas valores"
+      ],
+      "suggested_slug": "valor-casas-prefabricadas-precios-y-fotos",
+      "suggested_title": "Valor casas prefabricadas precios y fotos",
+      "target_word_count": 1800,
+      "internal_link_targets": [],
+      "external_authority_candidates": [],
+      "notes": "Auto-queued by keyword-researcher run 2026-05-21. Seed: casas prefabricadas."
+    },
+    {
+      "id": "2026-05-21-casas-prefabricadas-precios-y-modelos",
+      "status": "queued",
+      "queued_at": "2026-05-21T00:00:00Z",
+      "written_at": null,
+      "post_url": null,
+      "primary_keyword": "casas prefabricadas precios y modelos",
+      "intent": "commercial",
+      "volume": 1000,
+      "kd": null,
+      "fan_out_cluster": [
+        "casas prefabricadas",
+        "casas prefabricadas chile",
+        "casas prefabricadas temuco",
+        "casas prefabricadas puerto montt",
+        "casas prefabricadas kit completo precio",
+        "casas prefabricadas valores"
+      ],
+      "suggested_slug": "casas-prefabricadas-precios-y-modelos",
+      "suggested_title": "Casas prefabricadas precios y modelos",
+      "target_word_count": 1800,
+      "internal_link_targets": [],
+      "external_authority_candidates": [],
+      "notes": "Auto-queued by keyword-researcher run 2026-05-21. Seed: casas prefabricadas."
+    },
+    {
+      "id": "2026-05-21-casas-prefabricadas-melipilla",
+      "status": "queued",
+      "queued_at": "2026-05-21T00:00:00Z",
+      "written_at": null,
+      "post_url": null,
+      "primary_keyword": "casas prefabricadas melipilla",
+      "intent": "transactional",
+      "volume": 720,
+      "kd": null,
+      "fan_out_cluster": [
+        "casas prefabricadas",
+        "casas prefabricadas chile",
+        "casas prefabricadas temuco",
+        "casas prefabricadas puerto montt",
+        "casas prefabricadas kit completo precio",
+        "casas prefabricadas valores"
+      ],
+      "suggested_slug": "casas-prefabricadas-melipilla",
+      "suggested_title": "Casas prefabricadas melipilla",
+      "target_word_count": 1800,
+      "internal_link_targets": [],
+      "external_authority_candidates": [],
+      "notes": "Auto-queued by keyword-researcher run 2026-05-21. Seed: casas prefabricadas."
+    }
+  ]
 }

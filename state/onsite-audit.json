@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-05-21T20:49:00Z",
+  "site": "casasprefabricadaschile.cl",
+  "audited_urls": [
+    {
+      "url": "https://casasprefabricadaschile.cl/",
+      "verdict": "red",
+      "scores": {
+        "performance": 66,
+        "accessibility": 96,
+        "best_practices": 81,
+        "seo": 100
+      },
+      "core_web_vitals": {
+        "LCP_ms": 3094,
+        "CLS": 0.131,
+        "TBT_ms": 34,
+        "FCP_ms": 1891,
+        "TTI_ms": 3094,
+        "SI_ms": 2356
+      },
+      "lighthouse_issues": [
+        {"id": "largest-contentful-paint", "title": "LCP 3094ms supera umbral 2500ms (AMBER per Core Web Vitals)", "severity": "high", "category": "performance"},
+        {"id": "cumulative-layout-shift", "title": "CLS 0.131 supera umbral 0.10 (AMBER per CWV)", "severity": "high", "category": "performance"},
+        {"id": "total-byte-weight", "title": "1.27 MB total transferidos", "severity": "medium", "estimated_savings_kb": 200, "category": "performance"},
+        {"id": "unused-javascript", "title": "200 KB de JS no usado (Elementor + plugins)", "severity": "medium", "category": "performance"},
+        {"id": "server-response-time", "title": "TTFB 321ms (Apache + WP shared hosting)", "severity": "medium", "category": "performance"}
+      ],
+      "onpage_issues": [
+        {"id": "cookie_consent_polluting_h1", "title": "4 H1 detectados: 1 real + 3 inyectados por banner consent IAB TCF", "severity": "high"},
+        {"id": "cookie_consent_polluting_h2", "title": "200+ H2 detectados, mayoría son nombres de vendors IAB TCF inyectados como h2 en el DOM", "severity": "high"},
+        {"id": "wrong_locale_meta", "title": "og:locale = es_ES (España) debería ser es_CL (Chile)", "severity": "medium"},
+        {"id": "duplicate_meta_tags", "title": "Tag generator duplicado (Elementor + WP)", "severity": "low"},
+        {"id": "dom_node_count_excessive", "title": "DOM con 1500+ nodos, fuerza CLS + bootup time alto", "severity": "high"},
+        {"id": "meta_keywords_legacy", "title": "Tag meta keywords presente (legacy, ignorado por Google pero ruido)", "severity": "low"}
+      ],
+      "onpage_score": 97.07,
+      "stack": "WordPress + Elementor 3.24.3 + Apache",
+      "last_modified_header": "2024-09-21 12:37:56 +00:00"
+    },
+    {
+      "url": "https://casasprefabricadaschile.cl/temuco/",
+      "verdict": "red",
+      "scores": {
+        "performance": 63,
+        "accessibility": 88,
+        "best_practices": 81,
+        "seo": 100
+      },
+      "core_web_vitals": {
+        "LCP_ms": 3655,
+        "CLS": 0.122,
+        "TBT_ms": 49,
+        "FCP_ms": 1985,
+        "TTI_ms": 3657,
+        "SI_ms": 2613
+      },
+      "lighthouse_issues": [
+        {"id": "largest-contentful-paint", "title": "LCP 3655ms supera umbral 2500ms (AMBER per CWV) — peor que home", "severity": "high", "category": "performance"},
+        {"id": "cumulative-layout-shift", "title": "CLS 0.122 supera umbral 0.10", "severity": "high", "category": "performance"},
+        {"id": "total-byte-weight", "title": "2.8 MB total transferidos (más del doble que home)", "severity": "high", "category": "performance"},
+        {"id": "bootup-time", "title": "Bootup 108ms vs ~2ms en home — más JS ejecutado en city pages", "severity": "medium", "category": "performance"},
+        {"id": "unused-css-rules", "title": "100 KB de CSS no usado", "severity": "medium", "category": "performance"},
+        {"id": "unused-javascript", "title": "190 KB JS no usado", "severity": "medium", "category": "performance"}
+      ],
+      "onpage_issues": [
+        {"id": "cookie_consent_polluting_h1", "title": "4 H1 detectados (mismo problema sitewide)", "severity": "high"},
+        {"id": "cookie_consent_polluting_h2", "title": "200+ H2 contaminados por consent banner", "severity": "high"},
+        {"id": "stale_article_modified_time", "title": "og article:modified_time = 2020-09-23 (sin update >5 años)", "severity": "high"},
+        {"id": "wrong_locale_meta", "title": "og:locale = es_ES", "severity": "medium"},
+        {"id": "duplicate_meta_tags", "title": "generator duplicado", "severity": "low"},
+        {"id": "dom_node_count_excessive", "title": "DOM con 1500+ nodos", "severity": "high"}
+      ],
+      "onpage_score": 97.07,
+      "last_modified_header": "2024-09-21 12:44:09 +00:00",
+      "article_modified_time_meta": "2020-09-23 10:36:25 +00:00"
+    },
+    {
+      "url": "https://casasprefabricadaschile.cl/cuanto-cuesta-una-casa-prefabricada-en-chile/",
+      "verdict": "amber",
+      "scores": {
+        "performance": 78,
+        "accessibility": 96,
+        "best_practices": 81,
+        "seo": 100
+      },
+      "core_web_vitals": {
+        "LCP_ms": 2077,
+        "CLS": 0.034,
+        "TBT_ms": 47,
+        "FCP_ms": 1872,
+        "TTI_ms": 2077,
+        "SI_ms": 2363
+      },
+      "lighthouse_issues": [
+        {"id": "best-practices-mixed", "title": "BP 81 (sitewide), no específico de esta página", "severity": "low", "category": "best-practices"},
+        {"id": "total-byte-weight", "title": "1.04 MB total transferidos", "severity": "low", "category": "performance"},
+        {"id": "render-blocking-resources", "title": "2 scripts + 1 stylesheet render-blocking", "severity": "medium", "category": "performance"}
+      ],
+      "onpage_issues": [
+        {"id": "thin_content", "title": "883 palabras en pillar pricing query — debería tener 1800-2500 mínimo con tabla de precios actualizada", "severity": "high"},
+        {"id": "no_image_alt", "title": "Imágenes sin atributo alt", "severity": "medium"},
+        {"id": "low_content_rate", "title": "Plain text rate 4.8% (vs 11% en home y temuco) — mucho boilerplate respecto al contenido único", "severity": "medium"},
+        {"id": "stale_article_modified_time", "title": "og article:modified_time = 2020-07-18", "severity": "high"},
+        {"id": "wrong_locale_meta", "title": "og:locale = es_ES", "severity": "medium"},
+        {"id": "duplicate_meta_tags", "title": "generator duplicado", "severity": "low"},
+        {"id": "title_tag_blog_suffix", "title": "Title incluye '- Blog' sin valor para SERP. Considerar reescribir.", "severity": "low"}
+      ],
+      "onpage_score": 95.24,
+      "last_modified_header": "2024-09-21 17:24:16 +00:00",
+      "article_modified_time_meta": "2020-07-18 02:54:02 +00:00",
+      "word_count": 883
+    }
+  ],
+  "site_rollup": {
+    "avg_scores": {
+      "performance": 69,
+      "accessibility": 93,
+      "best_practices": 81,
+      "seo": 100
+    },
+    "avg_core_web_vitals": {
+      "LCP_ms": 2942,
+      "CLS": 0.096,
+      "TBT_ms": 43
+    },
+    "verdict": "red",
+    "template_issues": [
+      {"id": "cookie_consent_polluting_h_tags", "affected_urls": 2, "severity": "high", "fix": "Mover el consent banner fuera del flujo principal del DOM o renderizarlo en un shadow root. Hoy inyecta 200+ H2 que confunden a crawlers sobre la estructura semántica de la página."},
+      {"id": "wrong_locale_meta", "affected_urls": 3, "severity": "medium", "fix": "Setear og:locale=es_CL site-wide en Yoast/Elementor settings. Hoy 3/3 páginas mienten al crawler sobre el mercado."},
+      {"id": "duplicate_generator_meta", "affected_urls": 3, "severity": "low", "fix": "Remover el meta generator duplicado (Elementor lo inyecta además del de WP)."},
+      {"id": "stale_article_modified_time", "affected_urls": 2, "severity": "high", "fix": "Trigger una recolección Yoast del og:article:modified_time. Hoy Temuco y blog post anuncian al crawler que el contenido no se ha tocado desde 2020 — causa #4 del diagnóstico (staleness)."},
+      {"id": "dom_size_excessive", "affected_urls": 2, "severity": "high", "fix": "DOM con 1500+ nodos. Causado por Elementor + plugins. Migración a Astro (Fase 5) lo resuelve estructuralmente."},
+      {"id": "render_blocking_resources", "affected_urls": 3, "severity": "medium", "fix": "2 scripts + 1 stylesheet render-blocking en cada página. Defer/async o move-to-body."},
+      {"id": "lcp_amber_or_worse", "affected_urls": 2, "severity": "high", "fix": "LCP >2.5s en home y Temuco. Hero image es JPEG sin srcset, sin width/height, sin priority."}
+    ],
+    "money_page_alerts": [
+      {"url": "https://casasprefabricadaschile.cl/", "verdict": "red", "main_issue": "Performance 66, LCP 3094ms, H1+H2 contaminados por consent banner, og:locale incorrecto"},
+      {"url": "https://casasprefabricadaschile.cl/temuco/", "verdict": "red", "main_issue": "Performance 63 (peor de 3), LCP 3655ms, 2.8 MB total, article_modified 2020, H1+H2 contaminados"}
+    ]
+  }
+}
