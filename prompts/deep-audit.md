@@ -103,7 +103,21 @@ Reporta por página: grade + los fixes concretos priorizados (no genéricos: "fa
 
 ## Step 8: Indexación / zombie / orphan
 
-1. **Zombie**: del GSC page-level (Step 1, subir row_limit a 200) + `get_search_analytics` days=90, identifica páginas con impresiones pero ~0 clicks sostenido, y páginas indexadas con 0 impresiones (contenido muerto que diluye).
+**GATE DURO (validar antes de flaggear)**: NUNCA declares una URL como problema de indexación (legacy indexada, duplicado slash/no-slash, página que "compite") solo por verla en GSC o DataForSEO. Las impresiones de GSC son **retrasadas**: tras una migración, Google sigue mostrando URLs viejas o variantes por semanas aunque ya estén 301/308. Antes de flaggear, **validá el servidor en vivo** con `curl` (Bash):
+
+```bash
+curl -s -o /dev/null -w "%{http_code} -> %{redirect_url}" "https://dominio/ruta"
+```
+
+Clasificá según lo que devuelve el servidor HOY, no GSC:
+- **301/308 → destino correcto** = YA resuelto. Es residuo de GSC, NO un problema. No lo flaggees (a lo sumo "residuo de migración, Google reprocesará").
+- **200 sin canonical/noindex** = problema real (indexable, duplica o compite). Flaggear.
+- Para duplicados slash/no-slash: confirmá que una forma 301/308 a la otra. Si ambas dan 200, ahí sí hay duplicación.
+- Para subdominios/paneles (admin, staging): `curl -s <url> | grep -i 'name="robots"'` + `curl -sI <url>` para ver `X-Robots-Tag`. Solo es problema si da 200 sin noindex.
+
+Evidencia del daño (2026-07-09, rocketmedia): marqué `/inicio`, trailing-slash y blogs viejos como "indexados y compitiendo" leyendo solo GSC. La validación en vivo mostró que TODOS estaban 301/308 correctos. Eran residuo. El único problema real (admin indexable) solo se confirmó con curl.
+
+1. **Zombie**: del GSC page-level (Step 1, subir row_limit a 200) + `get_search_analytics` days=90, identifica páginas con impresiones pero ~0 clicks sostenido, y páginas indexadas con 0 impresiones (contenido muerto que diluye). Para las que vayas a llamar "zombie/legacy", pasá el gate HTTP de arriba primero.
 2. **Cobertura sitemap vs tráfico**: `firecrawl_map` (o los sitemaps en `state/*.xml`) para el inventario de URLs. Cruza contra las URLs que aparecen en GSC/ranked. URLs en sitemap que no reciben NADA = candidatas a zombie/orphan.
 3. **Orphan (parcial)**: señala las que no reciben internal links evidentes (desde el scrape del home/nav). Marca esto como señal parcial, no definitiva (link graph completo es análisis aparte).
 4. Reporta: lista de zombies (indexada, sin tráfico), thin/underperformers, y el ratio de páginas productivas vs muertas (efecto zombie del sitio, `docs/06` M3).
@@ -128,4 +142,5 @@ Reporta por página: grade + los fixes concretos priorizados (no genéricos: "fa
 - Real data only. Null stays null. No invented positions or volumes.
 - Separate MEASURED from HYPOTHESIS. No qualitative verdict ("funciona", "quedó bien", "validado") without Joaquín's explicit OK. You report; he validates.
 - Token discipline per the Node snippet. Never read a 150k-char ranked-keywords file whole.
+- **Validá HTTP en vivo (curl) antes de flaggear cualquier problema de indexación** (Step 8 gate). GSC/DataForSEO impressions of legacy or slash-variant URLs are frequently residual after a migration; only a live 200 without canonical/noindex is a real problem.
 - Never use em dashes.
