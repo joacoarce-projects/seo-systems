@@ -82,6 +82,32 @@ No GSC access: say so, lean on DataForSEO ranked keywords for the ranking pictur
 - **NAP consistency**: name / address / phone on the site vs GBP.
 - **Comuna coverage**: does the site cover its comunas via on-page text (single page) or comuna pages? If comuna pages, sample 2 and check ≥30% unique text (D048). Flag templated find-replace pages.
 
+## Step 6: Canibalización (siempre, ambos arquetipos)
+
+Detecta cuando varias URLs del sitio compiten por la misma query o cluster. Sin embeddings, con la data que ya tienes:
+
+1. **GSC query+page** (si hay propiedad): `get_search_analytics` con `dimensions="query,page"`, days=90, row_limit=200. Agrupa por query: cualquier query que reciba impresiones en **2+ URLs distintas** es canibalización directa. Prioriza por volumen de impresiones perdidas.
+2. **Ranked keywords cluster**: del Step 2, usa `keyword_data.keyword_properties.core_keyword` para agrupar. Si keywords del mismo core cluster son propiedad de URLs distintas (ej. `/la-serena/` y `/` ambas rankean variantes de "casas prefabricadas la serena"), es solapamiento.
+3. Para cada cluster canibalizado reporta: query/cluster, las URLs competidoras + su posición, y la acción sugerida (consolidar / canonical / diferenciar intención / de-optimizar la débil). Esta es la lógica de `docs/06` M4.
+
+Regla dura (D023): canibalización detectada BLOQUEA agregar keywords/contenido nuevo en ese cluster hasta resolverla.
+
+## Step 7: On-page grading de money pages (por arquetipo)
+
+Para cada money page (de `context/services.md` o las top `engine_pages` del Step 1): `firecrawl_scrape` (markdown + metadata) + `on_page_instant_pages`. Gradúa contra el checklist del arquetipo:
+
+- **contenido-aeo**: `docs/07-onpage-money-page-checklist.md`. Chequea: title+meta, **1 solo H1**, H2 con match parcial, conteo de palabras vs floor 950 + benchmark top-3, cobertura de entidades (no densidad), internal links hacia la money, DAB en el primer 30%, schema válido. Gate de 14 puntos.
+- **servicio-local**: `docs/09-local-service-playbook.md`. Chequea: title/meta con match parcial + comunas, concentración de relevancia (perfil de términos dominado por KW), FAQ buyer-intent, GBP embebido + reviews, NAP consistente, WhatsApp/CTA above the fold, jerarquía pretítulo/título. **NO** aplica floor 950.
+
+Reporta por página: grade + los fixes concretos priorizados (no genéricos: "falta H1 único, hoy hay 4 por el banner de consent" tipo).
+
+## Step 8: Indexación / zombie / orphan
+
+1. **Zombie**: del GSC page-level (Step 1, subir row_limit a 200) + `get_search_analytics` days=90, identifica páginas con impresiones pero ~0 clicks sostenido, y páginas indexadas con 0 impresiones (contenido muerto que diluye).
+2. **Cobertura sitemap vs tráfico**: `firecrawl_map` (o los sitemaps en `state/*.xml`) para el inventario de URLs. Cruza contra las URLs que aparecen en GSC/ranked. URLs en sitemap que no reciben NADA = candidatas a zombie/orphan.
+3. **Orphan (parcial)**: señala las que no reciben internal links evidentes (desde el scrape del home/nav). Marca esto como señal parcial, no definitiva (link graph completo es análisis aparte).
+4. Reporta: lista de zombies (indexada, sin tráfico), thin/underperformers, y el ratio de páginas productivas vs muertas (efecto zombie del sitio, `docs/06` M3).
+
 ## Output
 
 1. `clientes/<slug>/output/deep-audit-<YYYY-MM-DD>.md` with sections:
@@ -90,9 +116,12 @@ No GSC access: say so, lean on DataForSEO ranked keywords for the ranking pictur
    - **Motor de tráfico** (GSC page-level + KW-level)
    - **Perfil de backlinks** (y si hay toxicidad, flag disavow)
    - **Estructura + profundidad** (tipos de página, staleness, señales)
+   - **Canibalización** (clusters con URLs competidoras + acción sugerida) [Step 6]
+   - **On-page grading** (grade + fixes por money page, según arquetipo) [Step 7]
+   - **Indexación / zombie / orphan** (páginas muertas + efecto zombie) [Step 8]
    - **Gaps + oportunidades** priorizadas
    - **Datos duros** (tablas: top KW con pos/vol/URL, GSC top queries+pages, backlinks)
-2. `clientes/<slug>/state/deep-audit.json`: structured findings (archetype, money_keywords[], engine_pages[], backlinks{}, flags[], opportunities[]).
+2. `clientes/<slug>/state/deep-audit.json`: structured findings (archetype, money_keywords[], engine_pages[], backlinks{}, cannibalization[], onpage_grades[], zombie_pages[], flags[], opportunities[]).
 
 ## Hard rules
 

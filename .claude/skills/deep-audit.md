@@ -1,7 +1,7 @@
 ---
 name: deep-audit
-description: Run an end-to-end deep SEO audit of a client site. Detects the site archetype (servicio-local transaccional vs contenido-aeo), then runs GSC triage, ranked-keyword extraction (DataForSEO), backlink profile, structural pattern detection (Firecrawl), and benchmark vs top-3. For local sites it also checks GBP / local pack / comuna coverage. Produces a diagnosis report + JSON. Use when the user says "audita en profundidad", "deep audit cliente X", "por que rankea/cae este sitio", or wants the full picture, not just technical health.
-allowed-tools: Read, Write, Edit, Bash, mcp__gsc__list_properties, mcp__gsc__get_search_analytics, mcp__gsc__get_search_by_page_query, mcp__dfs-mcp__dataforseo_labs_google_ranked_keywords, mcp__dfs-mcp__backlinks_summary, mcp__dfs-mcp__dataforseo_labs_google_domain_rank_overview, mcp__dfs-mcp__serp_organic_live_advanced, mcp__dfs-mcp__business_data_business_listings_search, mcp__firecrawl__firecrawl_scrape, mcp__firecrawl__firecrawl_map
+description: Run an end-to-end deep SEO audit of a client site (the full M0-M6 diagnostic as one command). Detects the site archetype (servicio-local transaccional vs contenido-aeo), then runs GSC triage, ranked-keyword extraction (DataForSEO), backlink profile, structural pattern detection (Firecrawl), benchmark vs top-3, cannibalization detection, on-page grading of money pages (per archetype), and indexation/zombie/orphan inventory. For local sites it also checks GBP / local pack / comuna coverage. Produces a diagnosis report + JSON. Use when the user says "audita en profundidad", "deep audit cliente X", "por que rankea/cae este sitio", "canibalizacion", "on-page", or wants the full SEO picture, not just technical health.
+allowed-tools: Read, Write, Edit, Bash, mcp__gsc__list_properties, mcp__gsc__get_search_analytics, mcp__gsc__get_search_by_page_query, mcp__dfs-mcp__dataforseo_labs_google_ranked_keywords, mcp__dfs-mcp__backlinks_summary, mcp__dfs-mcp__dataforseo_labs_google_domain_rank_overview, mcp__dfs-mcp__serp_organic_live_advanced, mcp__dfs-mcp__on_page_instant_pages, mcp__dfs-mcp__business_data_business_listings_search, mcp__firecrawl__firecrawl_scrape, mcp__firecrawl__firecrawl_map
 ---
 
 # Deep Audit (auditoría end-to-end, on-demand)
@@ -36,6 +36,20 @@ Detect archetype FIRST, then run the matching depth:
 - **servicio-local** (intención transaccional: "a domicilio", "24h", "[servicio] [comuna]", "cerca de mi"; SERP con local_pack): also audit GBP, local pack presence, NAP consistency, comuna coverage. Benchmark against `docs/09-local-service-playbook.md`, NOT the 950-word floor.
 - **contenido-aeo** (informacional / YMYL; SERP con AI Overview / featured snippet): benchmark against `docs/06-audit-protocol.md` M0-M6 + `docs/07-onpage-money-page-checklist.md` (floor 950 aplica).
 - **hibrido**: run both lenses, label each money page by its own intent.
+
+## Módulos (una sola corrida, ver el prompt para el detalle)
+
+0. Detección de arquetipo (bifurca todo lo demás)
+1. Triage GSC (queries + pages, separa marca de valor SEO)
+2. Ranked keywords (motor de ranking, mapeo URL-intención)
+3. Perfil de backlinks (+ flag toxicidad)
+4. Estructura + profundidad de contenido (Firecrawl, staleness)
+5. Benchmark vs top-3 (+ rama local: GBP / local pack / NAP / comunas)
+6. **Canibalización** (GSC query+page + cluster de ranked keywords)
+7. **On-page grading** de money pages (docs/07 o docs/09 según arquetipo)
+8. **Indexación / zombie / orphan** (efecto zombie, docs/06 M3)
+
+Es el M0-M6 de `docs/06` corrible en un comando. `strategic-brain` consume estos hallazgos en vez de flaggearlos como blind spots.
 
 ## Hard rules
 
