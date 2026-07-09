@@ -34,6 +34,16 @@ All paths relative to `/path/to/the-four-systems/ai-ranking-automations/seo-agen
 
 The audit targets URLs in `context/audit-urls.txt`. If that file is missing, ask the user for 2-3 URLs (homepage + most-important pages) and offer to write the file. If the file is present, do not silently expand the list.
 
+## Archetype awareness (D046, docs/09)
+
+Before reporting, read `clientes/<slug>/_config.json` -> `arquetipo`. If `servicio-local`, the technical Lighthouse audit is NOT enough: also flag the local signals in the report (they are palanca #1 for this archetype):
+- GBP / local pack presence for the money keyword (note if it needs a manual Maps check).
+- NAP (nombre / dirección / teléfono) present and consistent on the money page.
+- WhatsApp / call CTA above the fold.
+- Embed de Google Maps en la money page.
+
+Consult `docs/09-local-service-playbook.md` for the local money-page template. Do NOT apply the 950-word floor to a transaccional-local money page (D048); that floor is for informacional/YMYL only.
+
 ## Cost expectation
 
 DataForSEO Lighthouse: ~$0.05 per URL.

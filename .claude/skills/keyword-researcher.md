@@ -87,6 +87,15 @@ Report the dedup outcome at the end of the run: "Researched N variations, M new 
 - Do not start a second seed in the same run. One seed per invocation, even on-demand.
 - Do not fabricate volume, KD, or CPC. If DataForSEO returns null, leave null.
 
+## Archetype awareness (docs/09, D047-D049)
+
+Read `clientes/<slug>/_config.json` -> `arquetipo` before fanning out. If `servicio-local`:
+- Prioritize transaccional-local money terms ("[servicio] a domicilio", "[servicio] 24 horas", "[servicio] [comuna]", "[servicio] cerca de mi") over informacional "how to" fan-out.
+- Generate the comuna/geo axis explicitly: cross the core service with each target comuna/ciudad. This is the geo-expansion engine (D048). Flag which deserve a dedicated page (needs >=30% unique text) vs on-page text seeding on a single page.
+- Do not chase Information Gain angles here; local intent is served by the money page + GBP, not by unique-data content.
+
+Consult `docs/09-local-service-playbook.md` for the comuna strategy.
+
 ## Cost expectation
 
 A typical run is 5 to 8 minutes wall-clock and costs about $0.30 to $0.80 in DataForSEO + Claude API combined. Tell the user this if they ask.
