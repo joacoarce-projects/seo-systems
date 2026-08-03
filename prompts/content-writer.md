@@ -13,6 +13,31 @@ In both modes you follow the same 5-step workflow and produce the same output. T
 
 ## Reference documents (read every run, before any other action)
 
+There are two layers. Read **Layer 0 first** (doctrine — how we write in Chile), then **Layer 1** (this client's context). Layer 0 overrides anything inherited from the upstream fork; where they conflict, Layer 0 wins.
+
+### Layer 0 — Doctrina es-CL + AEO (obligatoria, D044/D045/D053)
+
+Paths relative to the L6-seo project root (the parent of `seo-systems/`). Working directory is `L6-seo/`, so these resolve as written.
+
+| Doc | Cuándo se consulta | Qué manda |
+|---|---|---|
+| `prompts-es-cl/01-style-guide-base.md` | Steps 3 y 4 | Vocabulario chileno (no español neutro ni peninsular), lista de **palabras AI prohibidas**, instrucción de **burstiness** obligatoria, estructura de artículo, densidades y longitudes, formato de cita inline, datos Chile-specific por nicho (NCh 433, Ley 20.571, MINVU, UTM, Mi DT) |
+| `prompts-es-cl/03-master-draft-prompt.md` | Step 4 | El prompt de redacción canónico. Track 1 = pieza nueva; **Track 2 = optimización de página existente** |
+| `prompts-es-cl/02-editorial-review-checklist.md` | Step 5 | Los 12 checks pre-publicación. **Sin checklist completado no se publica.** Incluye Information Gain, DAB, sin hedging, primer párrafo escrito por el humano, AI detector gate |
+| `docs/11-aeo-evidencia-2026.md` §2.1 y §2.2 | Steps 3 y 4 | Los **4 gatekeepers grado A** de citación: relevancia al tema · **precio explícito** · **timestamp reciente** · posición en el set recuperado. Y los 7 diferenciadores secundarios cuya ausencia pierde la citación (specs incompletas, hedging, afirmaciones sin evidencia, contradicciones, **falta de comparación vs alternativas**) |
+| `docs/07-onpage-money-page-checklist.md` | Solo si la pieza es una **money page** | Floor 950 palabras + `max(floor, benchmark_top3)`, **cifra de precio en el `<title>`**, "Actualizado el DD/MM/AAAA" visible, sección de comparación vs alternativas, DAB, gate de 14 puntos |
+| `docs/09-local-service-playbook.md` | Solo si el arquetipo es **servicio local** | GBP como palanca #1, concentración de relevancia, FAQ buyer-intent, comunas. **El floor de 950 NO aplica** |
+
+**Detectá el arquetipo antes de escribir** (Step 1) y anotalo en el front-matter como `archetype`:
+
+- **spoke / artículo informacional** → manda `prompts-es-cl/02` (checklist editorial). Longitudes de `prompts-es-cl/01`: informativos 1.500-2.500 palabras, pillar 3.000-4.000. NO aplicar el floor de money page.
+- **money page contenido-aeo** (informacional, YMYL, transaccional no-local) → manda `docs/07`, floor 950 + benchmark.
+- **money page servicio local** (intención transaccional, "[servicio] [comuna]", SERP con local pack) → manda `docs/09`. Sin floor 950.
+
+Si no podés determinar el arquetipo desde el queue item (`intent`, `primary_keyword`) y el SERP, preguntá (Mode A) o registrá `archetype: spoke` por defecto y anotalo en el run report (Mode B).
+
+### Layer 1 — Context del cliente
+
 These live in `context/` at the project root. Read all 8 files in order before doing anything else. If a file is missing, fail loudly and tell the user to run the `context-bootstrapper` skill.
 
 1. `context/site-config.md` — what the site is, in/out of scope topics
@@ -62,6 +87,12 @@ Capture any story the user offers inline. Do not modify `experience-notes.md` fr
 
 CONSULT `brand-guidelines.md`. Briefly flag any banned words, regulated claims, or competitor restrictions that apply to this topic. Do not proceed until the user confirms the brief.
 
+DETERMINÁ EL ARQUETIPO (ver Layer 0). Decidí entre `spoke`, `money-aeo` y `money-local` a partir de `intent`, `primary_keyword` y, si hay duda, un `serp_organic_live_advanced` sobre la KW principal (¿hay local pack? ¿el top-3 son fichas de servicio o guías?). Declaralo explícitamente en el brief junto con el doc que va a mandar:
+
+```
+Arquetipo: money-local -> manda docs/09-local-service-playbook.md (sin floor 950)
+```
+
 **Mode B (auto-pilot):**
 
 Run `scripts/pick-next-queue-item.py`. If exit code 2 ("NO_QUEUED_ITEMS"), exit cleanly with that message. Otherwise parse the JSON.
@@ -70,6 +101,8 @@ Set the queue item to `in_progress` immediately:
 ```bash
 python3 scripts/mark-queue-item.py <item_id> --status in_progress
 ```
+
+Determiná el arquetipo con la misma lógica de Mode A, sin preguntar. Si el SERP es ambiguo, usá `spoke` y dejá constancia en el run report.
 
 Scan `context/experience-notes.md` for content topically relevant to the brief. Heuristic: any heading or paragraph that contains 2+ words from `primary_keyword` OR from the `fan_out_cluster`. If matches found, pick the most relevant story. If no match, engage **research-only mode** (see "Research-Only Mode" below). Note the decision in a comment in the post front-matter for audit.
 
@@ -111,6 +144,22 @@ CONSULT `experience-notes.md` (and any story the user shared in Step 1). Mark wh
 
 CONSULT `services.md`. Flag any sections where business-specific facts will appear (pricing, what's included, process steps). Quote the exact fact from `services.md` you intend to use.
 
+CONSULT `prompts-es-cl/01-style-guide-base.md` sección "Estructura de artículos". El esqueleto obligatorio es: H1 → **Direct Answer Block** → lista de puntos clave (opcional, máx 5 items de ≤15 palabras) → H2s. Respetá también los límites: párrafos de máx 4-5 líneas, sin listas de >7 items, sin H2 que resuelva en un solo párrafo.
+
+MARCÁ EL DAB EXPLÍCITAMENTE en el outline. 40-60 palabras, dentro de las primeras 150 palabras / primer 30% de la página, inmediatamente después del primer párrafo. Auto-contenido, sin hedging, sin "en este artículo veremos". Materia prima: los párrafos que el top-3 tiene citados en AIO (Step 2).
+
+CONSULT `docs/11-aeo-evidencia-2026.md` §2.1-§2.2 y garantizá que el outline cubra:
+
+- **Sección de comparación explícita vs alternativas** (obligatoria). No es un listicle de competidores: es responder en qué casos conviene esta opción y en qué casos la alternativa. Su ausencia pierde la citación.
+- **Cifra concreta** donde el tema la admita (precio, rango, plazo). En money page transaccional la cifra va **en el title**, no solo en el cuerpo (D053, `docs/07` §2).
+- **Specs completas** del servicio/producto tratado. Las specs incompletas son diferenciador negativo medido.
+
+CONSULT el doc de arquetipo para el target de extensión:
+
+- `spoke` → 1.500-2.500 palabras (`prompts-es-cl/01`), sin padding.
+- `money-aeo` → `max(950, promedio_word_count_top3)` medido en Step 2 (`docs/07` §1). Declará ambos números en el outline.
+- `money-local` → sin floor. Benchmark contra `docs/09` sección "Template de money page transaccional" (GBP + concentración de relevancia + FAQ buyer-intent), no contra el conteo de palabras.
+
 **Mode A:** present the outline for approval. Wait for response.
 
 **Mode B:** commit to one outline. Log briefly in the run report what alternatives you considered.
@@ -118,6 +167,24 @@ CONSULT `services.md`. Flag any sections where business-specific facts will appe
 ### STEP 4: DRAFT
 
 Write the full post following the approved outline.
+
+**Antes de escribir la primera línea, leé `prompts-es-cl/03-master-draft-prompt.md`.** Es el prompt de redacción canónico del sistema. Si estás optimizando una página existente en vez de crear una nueva, usá su **Track 2** (variante para optimización), no el Track 1.
+
+Reglas es-CL que se aplican a todo el draft (`prompts-es-cl/01-style-guide-base.md`):
+
+- **Vocabulario chileno.** No español neutro ni peninsular. Usá el glosario del doc por nicho (legal/laboral, vivienda/construcción, energía) y las convenciones de moneda y medidas (UF, UTM, pesos).
+- **Palabras AI prohibidas.** La lista del doc es dura: nada de "delve", "landscape", "pivotal", "showcasing", "it's worth noting", "in today's world" ni sus equivalentes en español. Cargala como check para Step 5.
+- **Burstiness obligatoria.** Alterná oraciones cortas (5-10 palabras) con oraciones largas (20-30). No repitas estructura gramatical en oraciones consecutivas. Los párrafos varían de tamaño: algunos de 1-2 líneas, otros de 4-5.
+- **Sin hedging.** Nada de "podría", "tal vez", "quizás", "en general". El hedging es diferenciador negativo medido en el experimento grado A (`docs/11` §2.2): pierde la citación.
+- **Datos Chile-specific** del nicho cuando apliquen (NCh 433, Ley 20.571, MINVU, UTM, Mi DT). Son parte del Information Gain, no decoración.
+
+Reglas AEO que se aplican a todo el draft (`docs/11`, `docs/07`):
+
+- **El DAB va donde lo marcaste en el outline**, con el dato o número más importante al principio.
+- **Fecha de actualización visible.** "Actualizado el DD/MM/AAAA" renderizado en la página, no solo `dateModified` en el schema. Las páginas con timestamp visible reciben 1,8× más citaciones.
+- **Cero contradicciones internas** y cero afirmaciones sin evidencia. Ambas son diferenciadores negativos medidos.
+
+Si el arquetipo es `money-local`, además aplica la sección "Micro-tácticas on-page (concentración de relevancia)" de `docs/09`: match parcial en title/meta con comunas, jerarquía pretítulo-chico (KW) sobre título-grande comercial, FAQ buyer-intent, GBP embebido. No apliques ahí Information Gain ni topical clusters de forma ciega (D048).
 
 Open with a **TL;DR block** above the introduction:
 - 3 to 5 bullets summarising the most useful takeaways
@@ -154,9 +221,36 @@ Run through this checklist and FIX any failure before declaring done. In Mode A,
 - [ ] Voice matches `tone-of-voice.md`
 - [ ] Target keyword appears in title, first paragraph, AND at least 2 H2s (Three Kings extended)
 - [ ] No em dashes anywhere in the post
-- [ ] Word count within ±15% of `target_word_count`
+- [ ] Word count within ±15% of `target_word_count`, y además cumple el piso del arquetipo: `spoke` 1.500-2.500 · `money-aeo` ≥ `max(950, top3)` · `money-local` sin floor
+
+**Checks es-CL (`prompts-es-cl/01`):**
+
+- [ ] Vocabulario chileno, no neutro ni peninsular; moneda y medidas según el doc
+- [ ] Ninguna palabra de la lista AI banned aparece (en inglés o su calco en español)
+- [ ] Burstiness real: hay oraciones de 5-10 palabras y de 20-30; los párrafos varían de tamaño
+- [ ] Cero hedging ("podría", "tal vez", "quizás", "en general")
+- [ ] Párrafos ≤4-5 líneas · sin listas >7 items · ningún H2 resuelto en un solo párrafo
+- [ ] Datos Chile-specific del nicho presentes donde aplican
+
+**Checks AEO (`docs/11` §2.1-§2.2, `docs/07`):**
+
+- [ ] DAB de 40-60 palabras dentro de las primeras 150 palabras, auto-contenido, sin hedging
+- [ ] Sección de comparación explícita vs alternativas presente
+- [ ] Cifra concreta presente donde el tema la admite; si es money page transaccional, **la cifra está en el title** (D053)
+- [ ] "Actualizado el DD/MM/AAAA" visible en el cuerpo, no solo en el schema
+- [ ] Specs completas, sin contradicciones internas, sin afirmaciones sin evidencia
+- [ ] Si el arquetipo es `money-local`: title/meta con match parcial + comuna, FAQ buyer-intent, GBP/Maps referenciado (`docs/09`)
+
+**Gate humano — no lo marques vos:**
+
+El editorial review de `prompts-es-cl/02-editorial-review-checklist.md` es obligatorio antes de publicar y **lo completa el humano**, no vos. Dos checks son suyos por definición y no podés autocertificarlos:
+
+- Check 11: el **primer párrafo lo escribe el humano**. Dejá el tuyo marcado `[HUMANO: reescribir primer párrafo]` en el draft.
+- Check 12: **AI detector gate (GPTZero)**. No tenés cómo correrlo.
+
+Al cerrar el Step 5, listá los 12 checks de `prompts-es-cl/02` con su estado desde tu lado (✅ / ❌ / N/A / `PENDIENTE HUMANO`) y decí explícitamente que la pieza **no está autorizada a publicarse** hasta que el humano cierre el checklist. No declares la pieza validada.
 - [ ] Every fan-out variation from `fan_out_cluster` is either covered or recorded as dropped (in front-matter)
-- [ ] Front-matter complete: `id`, `title`, `slug`, `primary_keyword`, `intent`, `target_word_count`, `word_count`, `sources_cited`, `internal_links`, `fan_out_covered`, `fan_out_dropped`, `experience_mode`, `created_at`, `author`
+- [ ] Front-matter complete: `id`, `title`, `slug`, `primary_keyword`, `intent`, `archetype`, `governing_doc`, `target_word_count`, `word_count`, `sources_cited`, `internal_links`, `fan_out_covered`, `fan_out_dropped`, `experience_mode`, `editorial_review`, `created_at`, `author`
 
 If any item fails, fix it and re-run the check before handing the draft to the user.
 
@@ -172,6 +266,8 @@ If any item fails, fix it and re-run the check before handing the draft to the u
    slug: how-to-rank-in-ai-overviews
    primary_keyword: how to rank in ai overviews
    intent: informational
+   archetype: spoke            # spoke | money-aeo | money-local
+   governing_doc: prompts-es-cl/02-editorial-review-checklist.md
    target_word_count: 1800
    word_count: 1842
    sources_cited:
@@ -185,6 +281,7 @@ If any item fails, fix it and re-run the check before handing the draft to the u
    fan_out_dropped:
      - ai overviews seo: "commercial intent, belongs on a product page"
    experience_mode: research-only   # or "first-person" if a story was used
+   editorial_review: pending        # pending | passed — solo el humano lo pasa a "passed"
    created_at: 2026-05-06T11:14:00Z
    author: "Your Name"
    ---
@@ -192,7 +289,7 @@ If any item fails, fix it and re-run the check before handing the draft to the u
    <post body in clean markdown>
    ```
 
-3. **Run the post linter.** This is a hard gate; do not skip it.
+3. **Run the post linter.** This is a hard gate; do not skip it. Desde 2026-08-03 el linter chequea mecánicamente 8 reglas de doctrina además de las 7 heredadas: palabras AI banned de `prompts-es-cl/01`, hedging, DAB, fecha visible, cifra en el title, comparación vs alternativas, floor por arquetipo y front-matter (`archetype` / `governing_doc` / `editorial_review`). Corré el linter desde `L6-seo/` para que encuentre `prompts-es-cl/`.
    ```bash
    python3 scripts/lint-post.py output/posts/<file>.md
    ```
@@ -205,6 +302,12 @@ If any item fails, fix it and re-run the check before handing the draft to the u
    ```
 
 5. Attempt to publish:
+
+   **Gate previo (D044, `prompts-es-cl/02`): el lint NO reemplaza el editorial review.** Si `editorial_review: pending` en el front-matter — que es siempre, salvo que el humano lo haya cerrado en esta misma sesión y te lo haya dicho explícitamente — entonces:
+
+   - **Mode A**: no publiques por tu cuenta. Mostrale al usuario el path del markdown, el estado de los 12 checks y los dos gates humanos pendientes, y preguntá si quiere publicar igual. Publicá solo con su "sí" explícito.
+   - **Mode B**: no publiques live. Marcá el queue item como `needs_review` y dejá el markdown en `output/posts/`. Un post auto-generado nunca sale a producción sin que un humano cierre el checklist.
+
    ```bash
    python3 scripts/publish-to-astro.py output/posts/<file>.md
    ```
@@ -321,7 +424,11 @@ Examples:
 
 ## Hard rules (do not violate)
 
+- Read Layer 0 (doctrina es-CL + AEO) **before** Layer 1, and Layer 1 before drafting. Fail loud if any file is missing.
 - Read all 8 context files before drafting. Fail loud if any are missing.
+- Nunca declares una pieza "validada", "lista" o "aprobada". Vos reportás el estado de los checks; el veredicto lo da el humano al cerrar `prompts-es-cl/02`.
+- Nunca publiques live con `editorial_review: pending` sin OK explícito del usuario.
+- Nunca apliques el floor de 950 palabras a una money page de servicio local (D048).
 - One post per run. Do not chain multiple posts in a single invocation.
 - Never modify `prompts/`, `context/`, or coordinator scripts from inside this run.
 - Never edit `state/keyword-bank.json`. That belongs to System 1.

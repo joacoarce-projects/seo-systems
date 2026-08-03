@@ -23,17 +23,38 @@ If the user says something like "write 3 posts" or "ship the whole queue", polit
 
 You run the same 5-step workflow as the scheduled `content-writer` agent, in **interactive mode**: you ask the user to pick from the queue, ask about topic-specific experience, present sources for approval, present the outline for approval, draft, self-review, save, mark the queue, and trigger the dashboard re-render.
 
-The full prompt with all rules (Content Capsule format, citation anchor rules, Three Kings, em-dash ban, fan-out coverage tracking, mode-aware behaviour) lives at:
+The full prompt with all rules (Layer 0 doctrina es-CL + AEO, arquetipos, Content Capsule format, citation anchor rules, Three Kings, em-dash ban, fan-out coverage tracking, mode-aware behaviour) lives at:
 
 ```
-ai-ranking-automations/seo-agents/prompts/content-writer.md
+seo-systems/prompts/content-writer.md
 ```
 
 **Read that prompt first.** It is the source of truth. This skill is the on-demand entry point. Do not duplicate its rules here.
 
 ## Project root
 
-All paths are relative to `/path/to/the-four-systems/ai-ranking-automations/seo-agents/`. Always cd there or use absolute paths.
+El working directory es `proyectos/L6-seo/`. Desde ahí:
+
+- Motor, prompts y scripts: `seo-systems/`
+- Context / state / output del cliente: `clientes/<slug>/`
+- Doctrina (Layer 0): `prompts-es-cl/` y `docs/` — cuelgan de `L6-seo/`, NO de `seo-systems/`
+
+Los paths de Layer 0 que cita el prompt son relativos a `L6-seo/`. Si estás parado en `seo-systems/`, no resuelven: volvé a `L6-seo/` o usá paths absolutos.
+
+## Doctrina obligatoria (Layer 0)
+
+Antes de los 8 archivos de `context/`, leé:
+
+| Doc | Qué manda |
+|---|---|
+| `prompts-es-cl/01-style-guide-base.md` | Vocabulario chileno, palabras AI prohibidas, burstiness, estructura, longitudes |
+| `prompts-es-cl/03-master-draft-prompt.md` | Prompt de redacción canónico (Track 1 nueva pieza / Track 2 optimización) |
+| `prompts-es-cl/02-editorial-review-checklist.md` | Los 12 checks pre-publicación. **Gate humano, no lo cerrás vos** |
+| `docs/11-aeo-evidencia-2026.md` §2.1-2.2 | 4 gatekeepers grado A + 7 diferenciadores secundarios |
+| `docs/07-onpage-money-page-checklist.md` | Solo money page contenido-aeo: floor 950 + cifra en el title + fecha visible |
+| `docs/09-local-service-playbook.md` | Solo money page servicio local: GBP #1, **sin floor 950** |
+
+Detectá el arquetipo (`spoke` / `money-aeo` / `money-local`) en el Step 1 y declaralo. De eso depende qué doc manda.
 
 ## How interactive mode differs from auto-pilot
 
@@ -50,7 +71,7 @@ Do not fall back to auto-pilot inside this skill. If the user is annoyed by the 
 
 ## Reading the 8 context files
 
-Same rule as the prompt: read all 8 files in `context/` before doing anything else. If any are missing, stop and tell the user to run the `context-bootstrapper` skill first. Do not attempt to draft a post against an incomplete context folder.
+Same rule as the prompt: read Layer 0 first, luego los 8 archivos de `context/`, antes de cualquier otra cosa. If any are missing, stop and tell the user to run the `context-bootstrapper` skill first. Do not attempt to draft a post against an incomplete context folder.
 
 ## When the queue is empty
 
@@ -69,8 +90,10 @@ A typical run is 25 to 40 minutes wall-clock (most of that is you waiting for th
 
 ## Hard rules
 
-- **Read the full prompt at `prompts/content-writer.md` before any action.** Do not skim. Re-read it on every invocation.
+- **Read the full prompt at `seo-systems/prompts/content-writer.md` before any action.** Do not skim. Re-read it on every invocation.
+- **Leé Layer 0 antes de escribir.** `prompts-es-cl/` y `docs/07|09|11` mandan sobre lo heredado del fork.
 - One post per invocation.
+- Nunca declares la pieza validada ni la publiques live con `editorial_review: pending` sin OK explícito de Joaquín.
 - Never auto-publish before writing to `output/posts/`. The local markdown file is the canonical artifact.
 - Never fabricate a citation, a customer story, a stat, or a business fact. If you cannot back it up, drop it or flag `[TK: confirm]`.
 - Never edit `state/keyword-bank.json` (that's System 1's territory).
