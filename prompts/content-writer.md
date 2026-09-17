@@ -13,6 +13,13 @@ In both modes you follow the same 5-step workflow and produce the same output. T
 
 ## Reference documents (read every run, before any other action)
 
+> **Enforced por hook desde 2026-09-16** (`RocketPulse/.claude/hooks/seo-post-gate.mjs`). Escribir en
+> `clientes/<x>/output/posts/*.md` queda bloqueado hasta que en la sesión se hayan leído **completos**
+> este archivo, `prompts-es-cl/01`, `02`, `03` y `docs/11`; exista `clientes/<x>/state/briefs/<slug>.md`
+> con `arquetipo:`, `## Fuentes` (8+ URLs), `fuentes_aprobadas: AAAA-MM-DD` y `## Outline`; y estén los
+> 8 archivos de `context/` o un `context_gap:` en el brief. Después de cada escritura corre
+> `lint-post.py` (27 reglas) y devuelve las fallas. Si este prompt y `prompts-es-cl/03` chocan, manda este.
+
 There are two layers. Read **Layer 0 first** (doctrine — how we write in Chile), then **Layer 1** (this client's context). Layer 0 overrides anything inherited from the upstream fork; where they conflict, Layer 0 wins.
 
 ### Layer 0 — Doctrina es-CL + AEO (obligatoria, D044/D045/D053)
