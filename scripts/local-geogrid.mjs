@@ -36,7 +36,8 @@ const arg = (k, d) => { const i = args.indexOf('--' + k); return i >= 0 ? args[i
 const slug = arg('cliente');
 if (!slug) { console.error('Falta --cliente <slug>'); process.exit(1); }
 
-const cfgPath = path.join(ROOT, 'clientes', slug, 'state', 'geogrid.json');
+// --config <archivo> en state/ para una grilla alternativa (p. ej. por servicio) sin pisar la base.
+const cfgPath = path.join(ROOT, 'clientes', slug, 'state', arg('config', 'geogrid.json'));
 if (!fs.existsSync(cfgPath)) { console.error('No existe ' + cfgPath); process.exit(1); }
 const cfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
 
